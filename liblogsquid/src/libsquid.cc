@@ -2,6 +2,10 @@
 
 namespace nsLogFormat {
 
+/*
+ * very simple implementation of the conversion
+ * from upper case to lower case
+ */
 std::string LogSquid::to_lowercase(std::string s) {
    std::string x;
    for(size_t i=0; i<s.length(); i++ ) {
