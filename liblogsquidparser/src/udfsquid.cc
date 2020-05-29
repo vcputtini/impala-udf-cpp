@@ -1,1 +1,0 @@
-/* udfsquid.cc */
