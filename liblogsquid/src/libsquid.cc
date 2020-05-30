@@ -4,7 +4,7 @@ namespace nsLogFormat {
 
 /*
  * very simple implementation of the conversion
- * from upper case to lower case
+ * from uppercase to lowercase
  */
 std::string LogSquid::to_lowercase(std::string s) {
    std::string x;
@@ -33,16 +33,14 @@ std::vector<std::string> LogSquid::parse(std::string slog)
   std::vector<std::string> vbuf;
 
   for(size_t i=0; i<= slog.length(); i++) {
-   char c = slog[i];
+    char c = slog[i];
     if( c == ' ' || c == 0) {
-        std::cout << std::endl;
         vbuf.push_back(sbuf);
         sbuf.clear();
     } else if(c == '[' ){
         i++;
         sbuf.clear();
         while( slog[i] != ']' ) {
-           std::cout << slog[i];
            sbuf += slog[i];
            i++;
         }
@@ -50,12 +48,10 @@ std::vector<std::string> LogSquid::parse(std::string slog)
         i++;
         sbuf.clear();
         while( slog[i] != '\"' ) {
-           std::cout << slog[i];
            sbuf += slog[i];
            i++;
         }
     } else{
-        std::cout << c;
         sbuf += slog[i];
     }
   }
