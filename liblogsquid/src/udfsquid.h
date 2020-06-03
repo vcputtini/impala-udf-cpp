@@ -5,7 +5,7 @@
 
 using namespace impala_udf;
 
-StringVal log_parts(FunctionContext* ctx, const StringVal& logformat,
+StringVal udf_logparts(FunctionContext* ctx, const StringVal& logformat,
                     const StringVal& part,
                     const StringVal& log);
 

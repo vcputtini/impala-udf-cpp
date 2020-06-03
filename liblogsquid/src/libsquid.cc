@@ -5,7 +5,7 @@ namespace nsLogFormat {
 /* ************************* ReservedWords ********************************** */
 /*
  * NAME: ReservedWords Constructor
- * SUBJECT: Populate maps
+ * SUBJECT: Maps initialization
  * PARAMS:
  *  IN: none
  *  OUT: none
@@ -14,99 +14,99 @@ namespace nsLogFormat {
 ReservedWords::ReservedWords()
 {
    mKey = {
-           { "unix_timestamp", unix_timestamp },
-           { "sec_since_epch", sec_since_epch },
-           { "milliseconds", milliseconds },
-           { "response_time", response_time },
-           { "client_src_ip_addr", client_src_ip_addr },
-           { "squid_req_st_and_http_st_send", squid_req_st_and_http_st_send },
-           { "squid_req_status", squid_req_status },
-           { "squid_hier_status", squid_hier_status },
-           { "squid_req_and_hier_status", squid_req_and_hier_status },
-           { "squid_hier_st_and_server_ip", squid_hier_st_and_server_ip },
-           { "http_status_send", http_status_send },
-           { "total_size_req", total_size_req },
-           { "req_method", req_method },
-           { "req_url_rcv", req_url_rcv },
-           { "mime_type", mime_type },
-           { "server_ip", server_ip },
-           { "user_name_from_ident", user_name_from_ident },
-           { "user_name", user_name },
-           { "local_time", local_time },
-           { "req_proto_ver", req_proto_ver },
-           { "origin_rcv_req_header",  origin_rcv_req_header },
-           { "referrer", referrer },
-           { "user_agent", user_agent },
-           { "", not_found }
+      { "unix_timestamp", unix_timestamp }, // %ts.%03tu
+      { "sec_since_epch", sec_since_epch }, // %ts
+      { "milliseconds", milliseconds },     // %tu
+      { "response_time", response_time },   // %tr
+      { "client_src_ip_addr", client_src_ip_addr }, // %>a
+      { "squid_req_st_and_http_st_send", squid_req_st_and_http_st_send }, // %Ss/%03>Hs
+      { "squid_req_status", squid_req_status }, // %Ss
+      { "squid_hier_status", squid_hier_status }, // %Sh
+      { "squid_req_and_hier_status", squid_req_and_hier_status }, // %Ss/%sh
+      { "squid_hier_st_and_server_ip", squid_hier_st_and_server_ip }, // %Sh/%<a
+      { "http_status_send", http_status_send }, // %>Hs
+      { "total_size_req", total_size_req }, // %<st
+      { "req_method", req_method }, // %rm
+      { "req_url_rcv", req_url_rcv }, // %ru
+      { "mime_type", mime_type }, // %mt
+      { "server_ip", server_ip }, // %<a
+      { "user_name_from_ident", user_name_from_ident }, // %ui
+      { "user_name", user_name }, // %un
+      { "local_time", local_time }, // %tl
+      { "req_proto_ver", req_proto_ver }, // %rv
+      { "origin_rcv_req_header",  origin_rcv_req_header }, // %>h
+      { "referrer", referrer }, // %{Referrer}
+      { "user_agent", user_agent }, // %{User-Agent}
+      { "", not_found }
     }; // mKey
 
-
     mFmtSquid = {
-          { unix_timestamp, 0 },
-          { response_time, 1 },
-          { client_src_ip_addr, 2 },
-          { squid_req_st_and_http_st_send, 3 },
-          { total_size_req, 4 },
-          { req_method, 5 },
-          { req_url_rcv, 6 },
-          { user_name, 7 },
-          { squid_hier_st_and_server_ip, 8 },
-          { mime_type, 9 },
-          { not_found, -1 }
+      { unix_timestamp, 0 },
+      { response_time, 1 },
+      { client_src_ip_addr, 2 },
+      { squid_req_st_and_http_st_send, 3 },
+      { total_size_req, 4 },
+      { req_method, 5 },
+      { req_url_rcv, 6 },
+      { user_name, 7 },
+      { squid_hier_st_and_server_ip, 8 },
+      { mime_type, 9 },
+      { not_found, -1 }
     };
 
     mFmtCommon = {
-          { client_src_ip_addr, 0 },
-          { user_name_from_ident, 1 },
-          { user_name, 2 },
-          { local_time, 3 },
-          { req_method, 4 },
-          { req_url_rcv, 5 },
-          { req_proto_ver, 6 },
-          { http_status_send, 7 },
-          { total_size_req, 8 },
-          { squid_req_and_hier_status, 9 },
-          { not_found, -1 }
+      { client_src_ip_addr, 0 },
+      { user_name_from_ident, 1 },
+      { user_name, 2 },
+      { local_time, 3 },
+      { req_method, 4 },
+      { req_url_rcv, 5 },
+      { req_proto_ver, 6 },
+      { http_status_send, 7 },
+      { total_size_req, 8 },
+      { squid_req_and_hier_status, 9 },
+      { not_found, -1 }
     };
 
     mFmtCombined = {
-          { client_src_ip_addr, 0 },
-          { user_name_from_ident, 1 },
-          { user_name, 2 },
-          { local_time, 3 },
-          { req_method, 4 },
-          { req_url_rcv, 5 },
-          { req_proto_ver, 6 },
-          { http_status_send, 7 },
-          { total_size_req, 8 },
-          { referrer, 9 },
-          { user_agent, 10 },
-          { squid_req_and_hier_status, 11 },
-          { not_found, -1 }
+      { client_src_ip_addr, 0 },
+      { user_name_from_ident, 1 },
+      { user_name, 2 },
+      { local_time, 3 },
+      { req_method, 4 },
+      { req_url_rcv, 5 },
+      { req_proto_ver, 6 },
+      { http_status_send, 7 },
+      { total_size_req, 8 },
+      { referrer, 9 },
+      { user_agent, 10 },
+      { squid_req_and_hier_status, 11 },
+      { not_found, -1 }
     };
 
     mFmtReferrer = {
-            { unix_timestamp, 0 },
-            { client_src_ip_addr, 1 },
-            { referrer, 2 },
-            { req_url_rcv, 3 },
-            { not_found, -1 }
+      { unix_timestamp, 0 },
+      { client_src_ip_addr, 1 },
+      { referrer, 2 },
+      { req_url_rcv, 3 },
+      { not_found, -1 }
     };
 
     mFmtUserAgent = {
-            { client_src_ip_addr, 0 },
-            { local_time, 1 },
-            { user_agent, 2 }
+      { client_src_ip_addr, 0 },
+      { local_time, 1 },
+      { user_agent, 2 }
     };
 }
 
 /*
  * NAME: getToken
- * SUBJECT: Populate maps
+ * SUBJECT: Retruns the token tha refers
  * PARAMS:
- *  IN:
- *  OUT:
+ *  IN: keyword
+ *  OUT: eRWords token
  * COMMENTS:
+ * e.g.: getToken("local_time")
  */
 ReservedWords::eRWords ReservedWords::getToken(std::string key)
 {
@@ -120,10 +120,14 @@ ReservedWords::eRWords ReservedWords::getToken(std::string key)
 
 /*
  * NAME: getIndex
- * SUBJECT: 
+ * SUBJECT: Returns the value of the part's position index within the log line.
  * PARAMS:
- *  IN: none
- *  OUT: none
+ *  IN:
+ *   arg 1: string - What's the log format: squid | common | combined |
+ *                   referrer | useragent
+ *   arg 2: string - Part's name.
+ *   arg 3: eRWords - constant enum
+ *  OUT: int8_t index
  * COMMENTS:
  */
 int8_t ReservedWords::getIndex(std::string fmt, std::string part, eRWords rw)
@@ -165,10 +169,10 @@ std::string LogSquid::to_lowercase(std::string s) {
 
 /*
  * NAME: getPart
- * SUBJECT:
+ * SUBJECT: Returns the information regarding the chosen part of the log.
  * PARAMS:
  *  IN: none
- *  OUT: none
+ *  OUT: string
  * COMMENTS:
  */
 std::string LogSquid::getPart()
