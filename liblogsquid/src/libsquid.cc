@@ -2,16 +2,149 @@
 
 namespace nsLogFormat {
 
+/* ************************* ReservedWords ********************************** */
+ReservedWords::ReservedWords()
+{
+   mKey = {
+           { "unix_timestamp", unix_timestamp },
+           { "sec_since_epch", sec_since_epch },
+           { "milliseconds", milliseconds },
+           { "response_time", response_time },
+           { "client_src_ip_addr", client_src_ip_addr },
+           { "squid_req_st_and_http_st_send", squid_req_st_and_http_st_send },
+           { "squid_req_status", squid_req_status },
+           { "squid_hier_status", squid_hier_status },
+           { "squid_req_and_hier_status", squid_req_and_hier_status },
+           { "squid_hier_st_and_server_ip", squid_hier_st_and_server_ip },
+           { "http_status_send", http_status_send },
+           { "total_size_req", total_size_req },
+           { "req_method", req_method },
+           { "req_url_rcv", req_url_rcv },
+           { "mime_type", mime_type },
+           { "server_ip", server_ip },
+           { "user_name_from_ident", user_name_from_ident },
+           { "user_name", user_name },
+           { "local_time", local_time },
+           { "req_proto_ver", req_proto_ver },
+           { "origin_rcv_req_header",  origin_rcv_req_header },
+           { "referrer", referrer },
+           { "user_agent", user_agent },
+           { "", not_found }
+    }; // mKey
+
+
+    mFmtSquid = {
+          { unix_timestamp, 0 },
+          { response_time, 1 },
+          { client_src_ip_addr, 2 },
+          { squid_req_st_and_http_st_send, 3 },
+          { total_size_req, 4 },
+          { req_method, 5 },
+          { req_url_rcv, 6 },
+          { user_name, 7 },
+          { squid_hier_st_and_server_ip, 8 },
+          { mime_type, 9 },
+          { not_found, -1 }
+    };
+
+    mFmtCommon = {
+          { client_src_ip_addr, 0 },
+          { user_name_from_ident, 1 },
+          { user_name, 2 },
+          { local_time, 3 },
+          { req_method, 4 },
+          { req_url_rcv, 5 },
+          { req_proto_ver, 6 },
+          { http_status_send, 7 },
+          { total_size_req, 8 },
+          { squid_req_and_hier_status, 9 },
+          { not_found, -1 }
+    };
+
+    mFmtCombined = {
+          { client_src_ip_addr, 0 },
+          { user_name_from_ident, 1 },
+          { user_name, 2 },
+          { local_time, 3 },
+          { req_method, 4 },
+          { req_url_rcv, 5 },
+          { req_proto_ver, 6 },
+          { http_status_send, 7 },
+          { total_size_req, 8 },
+          { referrer, 9 },
+          { user_agent, 10 },
+          { squid_req_and_hier_status, 11 },
+          { not_found, -1 }
+    };
+
+    mFmtReferrer = {
+            { unix_timestamp, 0 },
+            { client_src_ip_addr, 1 },
+            { referrer, 2 },
+            { req_url_rcv, 3 },
+            { not_found, -1 }
+    };
+
+    mFmtUserAgent = {
+            { client_src_ip_addr, 0 },
+            { local_time, 1 },
+            { user_agent, 2 }
+    };
+}
+
+ReservedWords::eRWords ReservedWords::getKeyword(std::string key)
+{
+  std::map<std::string, eRWords>::iterator itmap;
+  itmap = mKey.find(key);
+  if( itmap != mKey.end() ) {
+      return itmap->second;
+  }
+  return not_found;
+}
+
+int8_t ReservedWords::getToken(std::string fmt, std::string part, eRWords rw)
+{
+  std::map<eRWords, int8_t>::iterator itmap;
+  if( fmt == "squid" ) {
+      itmap = mFmtSquid.find(rw);
+      if( itmap != mFmtSquid.end() ) return itmap->second;
+  } else if( fmt == "common" ) {
+      itmap = mFmtCommon.find(rw);
+      if( itmap != mFmtCommon.end() ) return itmap->second;
+  } else if( fmt == "combined" ) {
+      itmap = mFmtCombined.find(rw);
+      if( itmap != mFmtCombined.end() ) return itmap->second;
+  } else if( fmt == "referrer" ) {
+      itmap = mFmtReferrer.find(rw);
+      if( itmap != mFmtReferrer.end() ) return itmap->second;
+  } else if( fmt == "useragent" ) {
+      itmap = mFmtUserAgent.find(rw);
+      if( itmap != mFmtUserAgent.end() ) return itmap->second;
+  }
+
+  return not_found;
+}
+
+/* ************************* LogSquid *************************************** */
+
 /*
  * very simple implementation of the conversion
  * from uppercase to lowercase
  */
 std::string LogSquid::to_lowercase(std::string s) {
-   std::string x;
-   for(size_t i=0; i<s.length(); i++ ) {
-       x += tolower(s[i]);
-   }
-   return x;
+  std::string x;
+  for(size_t i=0; i<s.length(); i++ ) {
+     x += std::tolower(s[i]);
+  }
+  return x;
+}
+
+std::string LogSquid::getPart()
+{
+   ReservedWords rw;
+   std::vector<std::string> v;
+   v = parse(slogReg);
+   return v[ rw.getToken(slogFormat, slogPart, rw.getKeyword(slogPart)) ];
 }
 
 /*
@@ -33,21 +166,28 @@ std::vector<std::string> LogSquid::parse(std::string slog)
   std::vector<std::string> vbuf;
 
   for(size_t i=0; i<= slog.length(); i++) {
-    char c = slog[i];
-    if( c == ' ' || c == 0) {
+    if( slog[i] == ' ' || slog[i] == 0) {
+        sbuf.erase(0, sbuf.find_first_not_of(' '));
         vbuf.push_back(sbuf);
         sbuf.clear();
-    } else if(c == '[' ){
+    } else if(slog[i] == '[' ){
         i++;
         sbuf.clear();
         while( slog[i] != ']' ) {
            sbuf += slog[i];
            i++;
         }
-    } else if (c == '\"' ) {
+    } else if (slog[i] == '\"' ) {
         i++;
         sbuf.clear();
         while( slog[i] != '\"' ) {
+           if( slogFormat == "common" || slogFormat == "combined" ) {
+               if( slog[i] == ' ' ) {
+                       sbuf.erase(0, sbuf.find_first_not_of(' '));
+                       vbuf.push_back(sbuf);
+                       sbuf.clear();
+                }
+           }
            sbuf += slog[i];
            i++;
         }
@@ -55,7 +195,6 @@ std::vector<std::string> LogSquid::parse(std::string slog)
         sbuf += slog[i];
     }
   }
-
   // Remove empty elements from the vector
   // Adapted from: https://www.techiedelight.com/remove-elements-vector-inside-loop-cpp/
   for(auto it = vbuf.begin(); it != vbuf.end(); it++) {
@@ -63,6 +202,7 @@ std::vector<std::string> LogSquid::parse(std::string slog)
          vbuf.erase(it--);
       }
   }
+
   return vbuf;
 }
 

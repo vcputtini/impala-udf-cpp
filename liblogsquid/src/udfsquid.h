@@ -5,8 +5,9 @@
 
 using namespace impala_udf;
 
-StringVal log_parts(FunctionContext* ctx, StringVal& part,
-                          StringVal& log);
+StringVal log_parts(FunctionContext* ctx, const StringVal& logformat,
+                    const StringVal& part,
+                    const StringVal& log);
 
 
 #endif // LIBLOGSQUID_UDF_H
