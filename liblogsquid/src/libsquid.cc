@@ -3,6 +3,14 @@
 namespace nsLogFormat {
 
 /* ************************* ReservedWords ********************************** */
+/*
+ * NAME: ReservedWords Constructor
+ * SUBJECT: Populate maps
+ * PARAMS:
+ *  IN: none
+ *  OUT: none
+ * COMMENTS:
+ */
 ReservedWords::ReservedWords()
 {
    mKey = {
@@ -92,7 +100,15 @@ ReservedWords::ReservedWords()
     };
 }
 
-ReservedWords::eRWords ReservedWords::getKeyword(std::string key)
+/*
+ * NAME: getToken
+ * SUBJECT: Populate maps
+ * PARAMS:
+ *  IN:
+ *  OUT:
+ * COMMENTS:
+ */
+ReservedWords::eRWords ReservedWords::getToken(std::string key)
 {
   std::map<std::string, eRWords>::iterator itmap;
   itmap = mKey.find(key);
@@ -102,7 +118,15 @@ ReservedWords::eRWords ReservedWords::getKeyword(std::string key)
   return not_found;
 }
 
-int8_t ReservedWords::getToken(std::string fmt, std::string part, eRWords rw)
+/*
+ * NAME: getIndex
+ * SUBJECT: 
+ * PARAMS:
+ *  IN: none
+ *  OUT: none
+ * COMMENTS:
+ */
+int8_t ReservedWords::getIndex(std::string fmt, std::string part, eRWords rw)
 {
   std::map<eRWords, int8_t>::iterator itmap;
   if( fmt == "squid" ) {
@@ -139,12 +163,20 @@ std::string LogSquid::to_lowercase(std::string s) {
   return x;
 }
 
+/*
+ * NAME: getPart
+ * SUBJECT:
+ * PARAMS:
+ *  IN: none
+ *  OUT: none
+ * COMMENTS:
+ */
 std::string LogSquid::getPart()
 {
    ReservedWords rw;
    std::vector<std::string> v;
    v = parse(slogReg);
-   return v[ rw.getToken(slogFormat, slogPart, rw.getKeyword(slogPart)) ];
+   return v[ rw.getIndex(slogFormat, slogPart, rw.getToken(slogPart)) ];
 }
 
 /*

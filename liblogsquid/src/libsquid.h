@@ -53,9 +53,9 @@ public:
           not_found
   };
 
-  inline eRWords getKeyword(std::string key);
-  //inline int8_t getToken(std::string part, eRWords rw);
-  inline int8_t getToken(std::string fmt, std::string part, eRWords rw);
+  inline eRWords getToken(std::string key);
+  //inline int8_t getIndex(std::string part, eRWords rw);
+  inline int8_t getIndex(std::string fmt, std::string part, eRWords rw);
 
 private:
    std::map<std::string, eRWords> mKey;
