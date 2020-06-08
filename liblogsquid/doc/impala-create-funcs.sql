@@ -21,8 +21,13 @@
 -- CREATE DATABASE your-database-name;
 USE default;
 
--- drop function squid_logparts(string, string, string); 
+-- drop function squid_logparts(string, string, string);
 create function squid_logparts(string, string, string) returns string
 location '/user/cloudera/impala_udf/liblogsquid.so' SYMBOL='udf_logparts';
+
+-- drop function squid_totalsize_req(string,string);
+create function squid_totalsize_req(string,string) returns bigint
+location '/user/cloudera/impala_udf/liblogsquid.so' SYMBOL='udf_totalsizereq';
+
 
 show functions;

@@ -5,6 +5,9 @@ The main function *squid_logparts()*, allows us to retrieve only the information
 The motivation to write these routines, in addition to the study and improvement of techniques, was due to the fact that this type of approach frees us from the SERDE routines in Java, usually written for data collection systems such as Apache Flume.<br>
 So, very naturally, we can use these functions directly in SQL statements.
 
+When we need new functions or have ideas about a new function, we will implement it in the project.
+
+
 ## Compilation and Installation
 
 In Cloudera Quickstart environment:<br>
@@ -23,3 +26,48 @@ hdfs dfs -put -f  lib/liblogsquid.so /user/cloudera/impala_udf<br>
 
 * How to install library on Impala<br>
 Instructions are available in the doc/impala-create-functions.sql file.
+
+* Syntax<br>
+_string squid_logparts(string,string,string);_<br>
+Arguments:<br>
+1st: One these: squid | common | combined | referrer | useragent<br>
+2nd: Reserved Words: see list doc/reserved-words.txt<br>
+3rd: Log line<br>
+Comments: The function will always return the values in the string type. If the value returned is a number you should use CAST(expression AS type) to do the conversion.<br><br>
+_bigint squid_totalsize_req(string,string);_<br>
+1st: One these: squid | common | combined<br>
+3rd: Log line<br>
+Comments:This UDF is a facility that always returns the value of the 'Total Size of Reply send by client' field in bigint format
+
+* Supported Squid Log Formats<br>
+Up to this point the *squid_logparts()* can handle the default formats of Squid's log types, as follows:<br><br>
+Log Format: squid<br>
+%ts.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt<br>
+UDF Reserved Word: squid<br><br>
+Log Format: common<br>
+%>a %[ui %[un [%tl] "%rm %ru HTTP/%rv" %>Hs %<st %Ss:%Sh<br>
+UDF Reserved Word: common<br><br>
+Log Format: combined<br>
+%>a %[ui %[un [%tl] "%rm %ru HTTP/%rv" %>Hs %<st "%{Referer}>h" "%{User-Agent}>h" %Ss:%Sh<br>
+UDF Reserved Word: combined<br><br>
+Log Format: referrer<br>
+%ts.%03tu %>a %{Referer}>h %ru<br>
+UDF Reserved Word: referrer<br><br>
+Log Format: useragent<br>
+%>a [%tl] "%{User-Agent}>h"<br>
+UDF Reserved Word: useragent<br>
+
+* Reserved words to retrieve parts of the log<br>
+The complete list of words reserved for use in the function can be found in the *doc/reserved-words.txt* file
+
+* Usage Examples<br>
+select squid_logparts("squid", "unix_timestamp",
+'1590128490.529   399 192.168.100.25 TAG_NONE/200 0 CONNECT 2.22.197.191:443 - ORIGINAL_DST/2.22.197.191 -'
+);<br>
+Returns: 1590128490.529<br>
+select squid_logparts("combined", "client_src_ip_addr", FLD_LOG);<br>
+Returns: 172.16.50.100<br><br>
+slog = 1591165807.622      6 192.168.100.53 TCP_DENIED/403 **4131** POST http://su.ff.avast.com/R/A2QKIDVjOTFjZDExOTQ1MzQzZmViMTc3NzUzMDg4MTRiYzhlEgQEAgYgGKwCIgEAKgcIBBCjsex6OLCYjKABQiAAAAAAAAAAAAAAAAAAAAAA1rqmBFGB-l10EdXP6TiASUiAg5gI - HIER_NONE/- text/html<br>
+select squid_totalsize_req("squid", slog) as tot
+from squidlog;<br>
+Returns: 4131
