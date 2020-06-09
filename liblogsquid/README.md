@@ -71,3 +71,13 @@ slog = 1591165807.622      6 192.168.100.53 TCP_DENIED/403 **4131** POST http://
 select squid_totalsize_req("squid", slog) as tot
 from squidlog;<br>
 Returns: 4131
+
+
+select<br>
+  squid_logparts("squid", "client_src_ip_addr",slog) as IP,<br>
+  sum(squid_totalsize_req("squid", slog)) as TOTAL_BYTES<br>
+from squidlog<br>
+  group by squid_logparts("squid", "client_src_ip_addr",slog);<br>
+
+Results:<br>  
+![](doc/select-ex01.png)
