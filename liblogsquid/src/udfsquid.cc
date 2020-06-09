@@ -69,12 +69,16 @@ StringVal udf_logparts(FunctionContext* ctx, const StringVal& logformat,
     ctx->SetError(ss.str().c_str());
     return StringVal::null();
   }
+  
+  /* See note in: doc/changelog.txt, please.
+     [Removed]
   if(log.is_null || log.len == 0) {
     std::stringstream ss;
     ss << "Argument 3 (LOG): Cannot be empty. ";
     ctx->SetError(ss.str().c_str());
     return StringVal::null();
   }
+  */
 
   std::string spart((const char *)part.ptr, part.len);
   std::string slog((const char *)log.ptr, log.len);
@@ -103,13 +107,15 @@ BigIntVal udf_totalsizereq(FunctionContext* ctx, const StringVal& logformat,
     return BigIntVal::null();
   }
 
+/* See note in: doc/changelog.txt, please.
+   [Removed]
   if(log.is_null || log.len == 0) {
     std::stringstream ss;
     ss << "Argument 2 (LOG): Cannot be empty. ";
     ctx->SetError(ss.str().c_str());
     return BigIntVal::null();
   }
-
+*/
   std::string slogformat((const char *)logformat.ptr, logformat.len);
   std::string slog((const char *)log.ptr, log.len);
 
