@@ -1,0 +1,5 @@
+* Tue Jul 09 2020 Volnei Cervi Puttini <vcputtini@gmail.com>
+- udfsquid.cc: If we test if the field is null, when we use the function in
+  clause WHERE or HAVING, will always be considered null even if it is not.
+  I reported this problem on JIRA (IMPALA-9836).
+  So, I removed the test to the field to work as expected.
