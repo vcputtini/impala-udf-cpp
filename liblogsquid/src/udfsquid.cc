@@ -1,5 +1,5 @@
 /***************************************************************************
- * Copyright (c) 2020                                                      *
+ * Copyright (c) 2020-21                                                      *
  *      Volnei Cervi Puttini.  All rights reserved.                        *
  *      vcputtini@gmail.com
  *                                                                         *
@@ -69,7 +69,7 @@ StringVal udf_logparts(FunctionContext* ctx, const StringVal& logformat,
     ctx->SetError(ss.str().c_str());
     return StringVal::null();
   }
-  
+
   /* See note in: doc/changelog.txt, please.
      [Removed]
   if(log.is_null || log.len == 0) {

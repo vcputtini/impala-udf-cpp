@@ -7,7 +7,7 @@ problems of all kinds with performance and security.
 
 As much as possible we will provide UDFs for use and learning.
 
-We use **Cloudera Quickstart** for all our studies on the Hadoop ecosystem. With a special focus on Impala, HBASE and Flume.
+**NOTE:** Unfortunately the Cloudera QuickStart is no longer maintained, so I will no longer use this environment for testing. As soon as I find a suitable way for that I will try to improve this library. 
 
 - liblocation:<br>
 It is a minimal library of functions related to Geo localization to be used directly in SQL statements in Apache Impala. See liblocation/README.md for details.
